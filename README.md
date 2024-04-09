@@ -18,23 +18,35 @@ Call the DrawLineGraph method to draw the graphs within the Unity Editor.
 Add detailed information visualizations by clicking on data points on the graph.
 
 ```c#
-using UnityEditor;
-using UnityEngine;
 
-namespace QuickEditor.Graphic
+public class PlottingGraphTest : ScriptableObject
 {
-    [CustomEditor(typeof(PlottingGraphTest))]
-    public class PlottingGraphTestEditor : Editor
+    public Vector2[] graphData;
+}
+
+
+public class PlottingGraphTestEditor : Editor
+{
+    private PlottingGraph graph;
+
+    public override void OnInspectorGUI()
     {
-        public override void OnInspectorGUI()
+        base.OnInspectorGUI();
+        PlottingGraphTest graphTest = (PlottingGraphTest)target;
+
+        if (graph == null)
         {
-            base.OnInspectorGUI();
-            PlottingGraphTest graphTest = (PlottingGraphTest)target;
-            PlottingGraph graph = new PlottingGraph("test plotting graph", graphTest.graphData);
-            graph.DrawLineGraph(this);
+            graph = new PlottingGraph("test plotting graph", graphTest.graphData);
         }
+        else
+        {
+            graph.UpdateGraphData(graphTest.graphData);
+        }
+
+        graph.DrawLineGraph(this);
     }
 }
+
 ```
 
 This library helps you quickly create and visualize graphs, enhancing your workflow within the Unity Editor. It's an ideal tool for visually representing your graphical data.
